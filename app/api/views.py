@@ -6,12 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .services import CasinoService
 
-CASINO_MERCH_ID = 'kirill.io'
-CASINO_URL = 'qweqweqweq123123'
 
 
-@api_view(['GET'])
-def get_games(request):
-    casino = CasinoService().get_casino(CASINO_MERCH_ID, CASINO_URL)
-    games = casino.get_games()
-    return Response(games)
+def index(request):
+    return render(request, 'index.html')
