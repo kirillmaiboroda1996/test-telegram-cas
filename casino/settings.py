@@ -22,9 +22,9 @@ import os
 SECRET_KEY = '4&=99y-1i!ot3mgw(yed)(vr3b9cvfbk@hy9)270^j2j(1^1u0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['telegram-casino.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
