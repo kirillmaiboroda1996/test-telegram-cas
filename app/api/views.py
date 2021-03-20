@@ -5,9 +5,9 @@ from rest_framework.decorators import action, api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .services import CasinoService
-from django.shortcuts import render
 
 
-
-def index(request):
-    return render(request, 'templates/index.html')
+@api_view(['POST'])
+def get_webhook(request):
+    print(request.data)
+    return Response('hello!')

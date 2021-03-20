@@ -1,5 +1,7 @@
 from django.urls import path, include
-from .api.views import index
+from .views import index
+from .api.views import get_webhook
 urlpatterns = [
-    path('', index)
+    path('', index),
+    path('webhook/', get_webhook)
 ]
