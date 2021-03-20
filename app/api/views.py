@@ -23,7 +23,7 @@ def get_webhook(request):
     data = request.data
     chat_id = data['message']['chat']['id']
     message = data['message']['text']
-    name = data['from']['first_name']
+    name = data['message']['from']['first_name']
 
     text = f'Hello {name} welcome to our casino!'
 
