@@ -1,7 +1,8 @@
 from datetime import datetime
 from django.conf import settings
 from rest_framework import viewsets, permissions, status, generics
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .services import CasinoService
@@ -9,6 +10,13 @@ import requests
 
 
 BASE_URL = 'https://api.telegram.org/bot1682503641:AAEXVqQYzuox0rlOSkENYw_4n91BgZnPYfE/'
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def get_casino_webhook(request):
+    print(request.data)
+    return Response('accept')
 
 
 def send_message(chat_id, text):
