@@ -5,7 +5,7 @@ import telebot
 
 
 token = 'bot1682503641:AAEXVqQYzuox0rlOSkENYw_4n91BgZnPYfE'
-bot = telebot.TeleBot("TOKEN", parse_mode=None)
+bot = telebot.TeleBot("TOKEN")
 
 
 @api_view(['POST'])
@@ -17,14 +17,16 @@ def get_casino_webhook(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
+@bot.message_handler(commands=['start', 'help'])
 def get_webhook(request):
     data = request.data
     print(data)
     chat_id = data['message']['chat']['id']
-    message = data['message']['text']
+    bot.reply_to("Howdy, how are you doing?")
     name = data['message']['from']['first_name']
 
     text = f'Hello {name} welcome to our casino!'
+
     bot.send_message(chat_id, text)
     return Response('hello!')
 
