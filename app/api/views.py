@@ -4,8 +4,8 @@ from rest_framework.response import Response
 import telebot
 
 
-token = 'bot1682503641:AAEXVqQYzuox0rlOSkENYw_4n91BgZnPYfE'
-bot = telebot.TeleBot("TOKEN")
+token = '1682503641:AAH8liLeWDge1mr9M6tae_xbHrwT6WysfJc'
+bot = telebot.TeleBot(token)
 
 
 @api_view(['POST'])
