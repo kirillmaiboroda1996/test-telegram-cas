@@ -17,12 +17,10 @@ def get_casino_webhook(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-@bot.message_handler(commands=['start', 'help'])
 def get_webhook(request):
     data = request.data
     print(data)
     chat_id = data['message']['chat']['id']
-    bot.reply_to("Howdy, how are you doing?")
     name = data['message']['from']['first_name']
 
     text = f'Hello {name} welcome to our casino!'
