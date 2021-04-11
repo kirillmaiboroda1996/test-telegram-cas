@@ -19,7 +19,6 @@ class CasinoClass:
     def __init__(self, merch_id, merch_key):
         self.merch_id = merch_id
         self.merch_key = merch_key
-        # self.nonce = nonce
 
     def _make_signature(self, headers, params):
         sorted_dict = dict(sorted({**headers, **params}.items()))

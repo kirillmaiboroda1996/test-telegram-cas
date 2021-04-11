@@ -1,16 +1,14 @@
-import telebot
+import requests
 
-bot = telebot.TeleBot("1602312085:AAFBIp2r5ZYSiOCK-mx0UGBYTaULfv5SzCo", parse_mode=None)
+BASE_URL = 'https://api.telegram.org/bot1682503641:AAEXVqQYzuox0rlOSkENYw_4n91BgZnPYfE/'
 
-
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
+# bot = telebot.TeleBot("1602312085:AAFBIp2r5ZYSiOCK-mx0UGBYTaULfv5SzCo", parse_mode=None)
 
 
-@bot.message_handler(func=lambda m: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
+def send_message(chat_id, text):
+    url = BASE_URL + 'sendMessage'
+    answer = {'chat_id': chat_id, 'text': text}
+    r = requests.post(url, json=answer)
+    return r.json()
 
 
-bot.polling()
