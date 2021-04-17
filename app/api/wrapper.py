@@ -1,5 +1,6 @@
 import base64
 import random
+import uuid
 from hashlib import sha1
 import hmac
 import requests
@@ -13,28 +14,25 @@ CONNECT_TIMEOUT = 3.5
 READ_TIMEOUT = 9999
 
 
-class CasinoClass:
-    BASE_URL = 'https://game-aggregator.com/api/v1/'
+class CasinoSlots:
+    BASE_URL = 'https://staging.gamerouter.pw/api/index.php/v1'
 
     def __init__(self, merch_id, merch_key):
         self.merch_id = merch_id
         self.merch_key = merch_key
 
-    def _make_signature(self, headers, params):
-        sorted_dict = dict(sorted({**headers, **params}.items()))
+    def _make_signature(self, params, headers):
+        sorted_dict = dict(sorted({**params, **headers}.items()))
         string_from_dict = urlencode(sorted_dict)
-        hashed = hmac.new(b'self.merch_key', string_from_dict.encode(), sha1)
-        print(hashed)
-        return base64.encodebytes(hashed.digest()).decode('utf-8')
+        hashed = hmac.new(base64.b64decode(self.merch_key), base64.b64decode(string_from_dict), sha1)
+        hashed = hashed.digest()
+        return str(base64.urlsafe_b64encode(hashed), 'UTF-8')
 
     def _request(self, endpoint, method='get', params=None, data=None, proxy=None):
-
-        t = time()
-        nonce = ''.join([str(random.randint(0, 9)) for _ in range(8)])
-
+        nonce = uuid.uuid4().hex
         headers = {
             'X-Merchant-Id': self.merch_id,
-            'X-Timestamp': str(int(t)),
+            'X-Timestamp': str(int(time())),
             'X-Nonce': nonce,
         }
 
@@ -62,9 +60,9 @@ class CasinoClass:
             headers=headers,
             data=data,
         )
-
+        print(response)
         return response.json()
 
     def get_games(self):
         resource = 'games'
-        return self._request(endpoint=resource, params={"qwe": "qwe"})
+        return self._request(endpoint=resource, params={'uuid': '2'})
