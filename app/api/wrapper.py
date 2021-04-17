@@ -8,6 +8,7 @@ import hashlib
 from urllib.parse import urlencode
 from time import time
 from django.conf import settings
+from collections import OrderedDict
 
 session = requests.session()
 CONNECT_TIMEOUT = 3.5
@@ -23,26 +24,31 @@ class CasinoSlots:
 
     def _make_signature(self, params, headers):
         sorted_dict = dict(sorted({**params, **headers}.items()))
-        string_from_dict = urlencode(sorted_dict)
-        hashed = hmac.new(base64.b64decode(self.merch_key), base64.b64decode(string_from_dict), sha1)
-        hashed = hashed.digest()
-        return str(base64.urlsafe_b64encode(hashed), 'UTF-8')
+        string_from_dict = urlencode(sorted_dict).encode('utf-8')
+        print(string_from_dict)
+        hashed = hmac.new(self.merch_key.encode('utf-8'), string_from_dict, sha1)
+        return hashed.hexdigest()
 
     def _request(self, endpoint, method='get', params=None, data=None, proxy=None):
         nonce = uuid.uuid4().hex
-        headers = {
+        t = str(int(time()))
+        auth_headers = {
             'X-Merchant-Id': self.merch_id,
-            'X-Timestamp': str(int(time())),
+            'X-Timestamp': t,
             'X-Nonce': nonce,
         }
-
-        x_sign = self._make_signature(headers, params)
-        headers['X-Sign'] = x_sign
-        headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        print(auth_headers)
+        headers = {
+            'X-Merchant-Id': self.merch_id,
+            'X-Timestamp': t,
+            'X-Nonce': nonce,
+            'X-Sign': self._make_signature(params, auth_headers),
+            'Content-Type': 'application/x-www-form-urlencoded',
+        }
 
         print(headers)
         url = f"{self.BASE_URL}/{endpoint}"
-
+        print(url)
         read_timeout = READ_TIMEOUT
         connect_timeout = CONNECT_TIMEOUT
         if params:
@@ -51,7 +57,7 @@ class CasinoSlots:
             if 'connect-timeout' in params:
                 connect_timeout = params['connect-timeout'] + 10
 
-        response = session.request(
+        response = requests.request(
             method,
             url,
             params=params,
@@ -65,4 +71,4 @@ class CasinoSlots:
 
     def get_games(self):
         resource = 'games'
-        return self._request(endpoint=resource, params={'uuid': '2'})
+        return self._request(endpoint=resource, params={})
