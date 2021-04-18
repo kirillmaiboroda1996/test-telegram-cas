@@ -81,17 +81,17 @@ def get_webhook(request):
 
     if callback_data.startswith('game_'):
         print('game callback')
-        game_name = game.split('game_')[1]
+        game_name = callback_data.split('game_')[1]
 
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text='бесплатно', callback_data=game))
         bot.send_game(chat_id, game_short_name=game_name, reply_markup=keyboard)
         return Response('OK')
-    if game:
-        print(f'in game {game}')
+    if game and game is not None:
+        print(f'in game {callback_data}')
         games = casino.get_games()
-        game_name = game.split('game_')[1]
-        game_uuid = get_game_uid(game_name, games)
+
+        game_uuid = get_game_uid(game, games)
         game_url = casino.create_demo_game(game_uuid=game_uuid)['url']
         bot.answer_callback_query(callback_query_id=callback_query_id, url=game_url)
         return Response('OK')
