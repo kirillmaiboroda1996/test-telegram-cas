@@ -68,9 +68,9 @@ def get_game_keyboards(games):
 
     keyboard = telebot.types.InlineKeyboardMarkup(row_width=2)
     buttons = list()
-
+    print(buttons)
     for game in game_list:
-        buttons.append(telebot.types.InlineKeyboardButton(text=game))
+        buttons.append(telebot.types.InlineKeyboardButton(text=game, callback_game='yes'))
 
     keyboard.add(*buttons)
     return keyboard
