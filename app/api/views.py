@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -28,31 +30,45 @@ def get_game_list(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
+@bot.message_handler(commands=['start', 'help'])
 def get_webhook(request):
-    data = request.data
-    print(data)
-    chat_id = data['message']['chat']['id']
+    update = json.loads(request.body)
+    text = ''
+    chat_id = update["message"]["chat"]["id"]
 
-    name = data['message']['from']['first_name']
-    text = f'Hello {name} welcome to our casino!'
+    if 'callback_query' in update:
+        pass
 
-    markup = types.ReplyKeyboardMarkup()
-    itembtna = types.KeyboardButton('a')
-    itembtnv = types.KeyboardButton('v')
-    itembtnc = types.KeyboardButton('c')
-    itembtnd = types.KeyboardButton('d')
-    itembtne = types.KeyboardButton('e')
-    markup.row(itembtna, itembtnv)
-    markup.row(itembtnc, itembtnd, itembtne)
-    bot.send_message(chat_id, text, reply_markup=markup)
+    elif 'message' in update:
+
+        if 'text' in update['message']:
+            text = update['message']['text']
+
+            if text.startswith('/start'):
+                keyboard = get_main_keyboard()
+                bot.send_message(chat_id, text, reply_markup=keyboard)
+
+    if text == '🎰 Список игр 🎰':
+        games = CasinoSlots(merch_id, key).get_games()
+        get_game_keyboards(games)
+        bot.send_message(chat_id, 'Доступные игры')
+
     return Response('hello!')
 
 
-def default_test(message):
-    keyboard = types.InlineKeyboardMarkup()
-    url_button = types.InlineKeyboardButton(text="Перейти на Яндекс", url="https://ya.ru")
-    keyboard.add(url_button)
-    bot.send_message(message.chat.id, "Привет! Нажми на кнопку и перейди в поисковик.", reply_markup=keyboard)
+def get_main_keyboard():
+    keyboard = telebot.types.ReplyKeyboardMarkup(True, False)
+    keyboard.row('🎰 Список игр 🎰')
+    return keyboard
+
+
+def get_game_keyboards(games):
+    game_list = [game['name'] for game in games['items'][0]][:5]
+
+    keyboard = telebot.types.InlineKeyboardMarkup()
+
+    for item in game_list:
+        keyboard.add(telebot.types.InlineKeyboardButton(text=item, callback_game='yes'))
 
 # https://telegram-casino.herokuapp.com/api/v1/webhook/
 
