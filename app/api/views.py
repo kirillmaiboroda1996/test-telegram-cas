@@ -66,11 +66,15 @@ def get_main_keyboard():
 def get_game_keyboards(games):
     game_list = [game['name'] for game in games['items']][:5]
 
-    keyboard = telebot.types.InlineKeyboardMarkup()
+    keyboard = telebot.types.InlineKeyboardMarkup(row_width=2)
+    buttons = list()
 
-    for item in game_list:
-        keyboard.add(telebot.types.InlineKeyboardButton(text=item, callback_game='yes'))
+    for game in game_list:
+        buttons.append(telebot.types.InlineKeyboardButton(text=game))
+
+    keyboard.add(*buttons)
     return keyboard
+
 # https://telegram-casino.herokuapp.com/api/v1/webhook/
 
 
