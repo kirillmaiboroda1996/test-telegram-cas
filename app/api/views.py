@@ -70,7 +70,7 @@ def get_game_keyboards(games):
     buttons = list()
     print(buttons)
     for game in game_list:
-        buttons.append(telebot.types.InlineKeyboardButton(text=game, callback_game='yes'))
+        buttons.append(telebot.types.InlineKeyboardButton(text=game, callback_data='yes'))
 
     keyboard.add(*buttons)
     return keyboard
