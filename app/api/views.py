@@ -49,12 +49,13 @@ def get_webhook(request):
         chat_id = update["callback_query"]["from"]["id"]
         message_id = update['callback_query']['message']['message_id']
         callback_query_id = update['callback_query']['id']
-
+        print(callback_query_id)
         if 'game_short_name' in update["callback_query"]:
             game = update['callback_query']["game_short_name"]
+            print(game)
         else:
             callback_data = update["callback_query"]["data"]
-
+            print(callback_data)
     elif 'message' in update:
 
         if 'text' in update['message']:
@@ -70,14 +71,15 @@ def get_webhook(request):
     if text.startswith('/start'):
         keyboard = get_main_keyboard()
         bot.send_message(chat_id, text, reply_markup=keyboard)
+        return Response('OK')
 
     if text == '🎰 Список игр 🎰':
         games = casino.get_games()
         keyboard = get_game_keyboards(games)
         bot.send_message(chat_id, 'Доступные игры', reply_markup=keyboard)
+        return Response('OK')
 
     if callback_data.startswith('game_'):
-        game = callback_data[5:]
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text='бесплатно', callback_data=f'demo_{game}'))
         bot.send_game(chat_id, game_short_name=game, reply_markup=keyboard)
@@ -121,4 +123,5 @@ def get_game_keyboards(games):
 
 def get_game_uid(game_name, games):
     game_list = [game['uuid'] for game in games['items'] if game['name'] == game_name]
+    print(game_list[0])
     return game_list[0]
