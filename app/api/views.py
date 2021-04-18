@@ -49,13 +49,13 @@ def get_webhook(request):
         chat_id = update["callback_query"]["from"]["id"]
         message_id = update['callback_query']['message']['message_id']
         callback_query_id = update['callback_query']['id']
-        print(callback_query_id)
+        print(f'callback_id: {callback_query_id}')
         if 'game_short_name' in update["callback_query"]:
             game = update['callback_query']["game_short_name"]
-            print(game)
+            print(f'game: {game}')
         else:
             callback_data = update["callback_query"]["data"]
-            print(callback_data)
+            print(f'callback_data: {callback_data}')
     elif 'message' in update:
 
         if 'text' in update['message']:
@@ -83,12 +83,6 @@ def get_webhook(request):
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text='бесплатно', callback_data=f'demo_{game}'))
         bot.send_game(chat_id, game_short_name=game, reply_markup=keyboard)
-        return Response('OK')
-
-    if callback_data.startswith('demo_'):
-        keyboard = telebot.types.InlineKeyboardMarkup()
-        keyboard.add(telebot.types.InlineKeyboardButton(text='Играть бесплатно', callback_game=game))
-        bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id, reply_markup=keyboard)
         return Response('OK')
     if game:
         games = casino.get_games()
