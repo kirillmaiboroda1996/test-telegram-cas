@@ -49,7 +49,8 @@ def get_webhook(request):
         chat_id = update["callback_query"]["from"]["id"]
         message_id = update['callback_query']['message']['message_id']
         callback_query_id = update['callback_query']['id']
-        print(f'callback_id: {callback_query_id}')
+        print(f'callback_id: {callback_query_id}'
+              f'{callback_data.split("game_")[1]}')
         if 'game_short_name' in update["callback_query"]:
             game = update['callback_query']["game_short_name"]
             print(f'game: {game}')
@@ -84,7 +85,7 @@ def get_webhook(request):
         game_name = callback_data.split('game_')[1]
 
         keyboard = telebot.types.InlineKeyboardMarkup()
-        keyboard.add(telebot.types.InlineKeyboardButton(text='бесплатно', callback_data=game))
+        keyboard.add(telebot.types.InlineKeyboardButton(text='бесплатно', callback_data=game_name))
         bot.send_game(chat_id, game_short_name=game_name, reply_markup=keyboard)
         return Response('OK')
     if game and game is not None:
