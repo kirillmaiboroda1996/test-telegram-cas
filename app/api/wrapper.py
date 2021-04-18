@@ -72,3 +72,11 @@ class CasinoSlots:
     def get_games(self):
         resource = 'games'
         return self._request(endpoint=resource, params={})
+
+    def create_demo_game(self, game_uuid, return_url=None, language='en'):
+        resource = 'games/init-demo'
+        params = {
+            'game_uuid': game_uuid,
+            'language': language,
+        }
+        return self._request(endpoint=resource, method='post', params=params)
