@@ -49,14 +49,14 @@ def get_webhook(request):
         chat_id = update["callback_query"]["from"]["id"]
         message_id = update['callback_query']['message']['message_id']
         callback_query_id = update['callback_query']['id']
-        print(f'callback_id: {callback_query_id}'
-              f'{callback_data.split("game_")[1]}')
+        print(f'callback_id: {callback_query_id}')
         if 'game_short_name' in update["callback_query"]:
             game = update['callback_query']["game_short_name"]
             print(f'game: {game}')
         else:
             callback_data = update["callback_query"]["data"]
-            print(f'callback_data: {callback_data}')
+            print(f'callback_data: {callback_data} '
+                  f'{callback_data.split("game_")[1]}')
     elif 'message' in update:
 
         if 'text' in update['message']:
