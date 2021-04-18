@@ -37,6 +37,7 @@ def get_webhook(request):
     chat_id = update["message"]["chat"]["id"]
 
     if 'callback_query' in update:
+        print(update['callback_query']['message']['message_id'])
         pass
 
     elif 'message' in update:
@@ -63,7 +64,7 @@ def get_main_keyboard():
 
 
 def get_game_keyboards(games):
-    game_list = [game['name'] for game in games['items'][0]][:5]
+    game_list = [game['name'] for game in games['items']][:5]
 
     keyboard = telebot.types.InlineKeyboardMarkup()
 
