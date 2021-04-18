@@ -51,8 +51,8 @@ def get_webhook(request):
 
     if text == '🎰 Список игр 🎰':
         games = CasinoSlots(merch_id, key).get_games()
-        get_game_keyboards(games)
-        bot.send_message(chat_id, 'Доступные игры')
+        keyboard = get_game_keyboards(games)
+        bot.send_message(chat_id, 'Доступные игры', reply_markup=keyboard)
 
     return Response('hello!')
 
@@ -70,7 +70,7 @@ def get_game_keyboards(games):
 
     for item in game_list:
         keyboard.add(telebot.types.InlineKeyboardButton(text=item, callback_game='yes'))
-
+    return keyboard
 # https://telegram-casino.herokuapp.com/api/v1/webhook/
 
 
